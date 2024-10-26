@@ -22,8 +22,7 @@ public class ItemController {
     public ItemDto create(@RequestHeader("X-Sharer-User-Id") Long userId,
                           @Valid @RequestBody ItemCreateDto itemCreateDto) {
 
-        itemCreateDto.setOwnerId(userId);
-        Item item = itemService.create(itemCreateDto);
+        Item item = itemService.create(userId, itemCreateDto);
         log.info("Создан предмет: {}", item);
         return ItemMapper.toItemDto(item);
     }
@@ -33,8 +32,7 @@ public class ItemController {
                          @RequestHeader("X-Sharer-User-Id") Long userId,
                          @Valid @RequestBody ItemUpdateDto itemUpdateDto) {
 
-        itemUpdateDto.setOwnerId(userId);
-        Item item = itemService.update(itemId, itemUpdateDto);
+        Item item = itemService.update(itemId, userId, itemUpdateDto);
         log.info("Обновлен предмет: {}", item);
         return ItemMapper.toItemDto(item);
     }

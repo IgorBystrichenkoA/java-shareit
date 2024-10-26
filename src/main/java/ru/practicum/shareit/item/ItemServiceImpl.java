@@ -16,13 +16,22 @@ public class ItemServiceImpl implements ItemService {
     private final ItemRepository itemRepository;
 
     @Override
-    public Item create(ItemCreateDto itemCreateDto) {
+    public Item create(Long ownerId, ItemCreateDto itemCreateDto) {
+        itemCreateDto.setOwnerId(ownerId);
         return itemRepository.create(itemCreateDto);
     }
 
     @Override
-    public Item update(Long itemId, ItemUpdateDto itemUpdateDto) {
-        return itemRepository.update(itemId, itemUpdateDto);
+    public Item update(Long itemId, Long ownerId, ItemUpdateDto itemUpdateDto) {
+        Item dbItem = itemRepository.get(itemId).orElseThrow(() -> new NotFoundException("Item not found"));
+        if (itemUpdateDto.getName() != null) {
+            dbItem.setName(itemUpdateDto.getName());
+        }
+        if (itemUpdateDto.getDescription() != null) {
+            dbItem.setDescription(itemUpdateDto.getDescription());
+        }
+        dbItem.setOwnerId(ownerId);
+        return itemRepository.update(itemId, dbItem);
     }
 
     @Override

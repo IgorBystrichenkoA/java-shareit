@@ -1,9 +1,7 @@
 package ru.practicum.shareit.item;
 
 import org.springframework.stereotype.Repository;
-import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
-import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
 
 import java.util.List;
@@ -32,18 +30,9 @@ public class InMemoryItemRepository implements ItemRepository {
     }
 
     @Override
-    public Item update(Long itemId, ItemUpdateDto itemUpdateDto) {
-        Item itemToUpdate = items.get(itemId);
-        if (itemToUpdate == null) {
-            throw new NotFoundException("Item not found");
-        }
-        if (itemUpdateDto.getName() != null) {
-            itemToUpdate.setName(itemUpdateDto.getName());
-        }
-        if (itemUpdateDto.getDescription() != null) {
-            itemToUpdate.setDescription(itemUpdateDto.getDescription());
-        }
-        return itemToUpdate;
+    public Item update(Long itemId, Item itemUpdateDto) {
+        items.put(itemId, itemUpdateDto);
+        return itemUpdateDto;
     }
 
     @Override
