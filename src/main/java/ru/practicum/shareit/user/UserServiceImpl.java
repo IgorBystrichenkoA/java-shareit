@@ -16,18 +16,21 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User get(Long id) {
-        return null;
+        return repository.get(id).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
     }
 
     @Override
     public User create(UserCreateDto user) {
-        List<User> users = repository.findAll();
-        if (users.stream().anyMatch(u -> u.getEmail().equals(user.getEmail()))) {
+        if (containsEmail(user.getEmail())) {
             throw new IllegalArgumentException("Пользователь с таким email уже существует");
         }
         return repository.create(user);
     }
 
+    private boolean containsEmail(String email) {
+        List<User> users = repository.findAll();
+        return users.stream().anyMatch(u -> u.getEmail().equals(email));
+    }
     @Override
     public User update(User user) {
         User dbUser = repository.get(user.getId()).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
@@ -35,10 +38,11 @@ public class UserServiceImpl implements UserService {
             dbUser.setName(user.getName());
         }
         if (user.getEmail() != null) {
+            if (containsEmail(user.getEmail())) {
+                throw new IllegalArgumentException("Пользователь с таким email уже существует");
+            }
             dbUser.setEmail(user.getEmail());
         }
-        dbUser.setName(user.getName());
-        dbUser.setEmail(user.getEmail());
         return repository.update(dbUser);
     }
 

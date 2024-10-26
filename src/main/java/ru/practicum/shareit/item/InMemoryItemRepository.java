@@ -23,8 +23,8 @@ public class InMemoryItemRepository implements ItemRepository {
 
     @Override
     public Item create(ItemCreateDto itemCreateDto) {
-        Item item = new Item(++seq, itemCreateDto.getName(), itemCreateDto.getDescription(), true,
-                itemCreateDto.getOwnerId(), null);
+        Item item = new Item(++seq, itemCreateDto.getName(), itemCreateDto.getDescription(),
+                itemCreateDto.getAvailable(), itemCreateDto.getOwnerId(), null);
         items.put(item.getId(), item);
         return item;
     }
@@ -44,9 +44,13 @@ public class InMemoryItemRepository implements ItemRepository {
 
     @Override
     public List<Item> search(String text) {
+        if (text.isBlank()) {
+            return List.of();
+        }
         return items.values().stream()
-                .filter(item -> item.getName().toLowerCase().contains(text.toLowerCase())
-                        || item.getDescription().toLowerCase().contains(text.toLowerCase())).toList();
+                .filter(item -> item.getAvailable()
+                        && (item.getName().toLowerCase().contains(text.toLowerCase())
+                        || item.getDescription().toLowerCase().contains(text.toLowerCase())))
+                .toList();
     }
-
 }

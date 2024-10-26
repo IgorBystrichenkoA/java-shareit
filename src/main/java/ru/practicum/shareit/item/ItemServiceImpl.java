@@ -6,6 +6,7 @@ import ru.practicum.shareit.exception.NotFoundException;
 import ru.practicum.shareit.item.dto.ItemCreateDto;
 import ru.practicum.shareit.item.dto.ItemUpdateDto;
 import ru.practicum.shareit.item.model.Item;
+import ru.practicum.shareit.user.UserService;
 
 import java.util.List;
 
@@ -14,9 +15,11 @@ import java.util.List;
 public class ItemServiceImpl implements ItemService {
 
     private final ItemRepository itemRepository;
+    private final UserService userService;
 
     @Override
     public Item create(Long ownerId, ItemCreateDto itemCreateDto) {
+        userService.get(ownerId);
         itemCreateDto.setOwnerId(ownerId);
         return itemRepository.create(itemCreateDto);
     }
@@ -24,11 +27,15 @@ public class ItemServiceImpl implements ItemService {
     @Override
     public Item update(Long itemId, Long ownerId, ItemUpdateDto itemUpdateDto) {
         Item dbItem = itemRepository.get(itemId).orElseThrow(() -> new NotFoundException("Item not found"));
+        userService.get(ownerId);
         if (itemUpdateDto.getName() != null) {
             dbItem.setName(itemUpdateDto.getName());
         }
         if (itemUpdateDto.getDescription() != null) {
             dbItem.setDescription(itemUpdateDto.getDescription());
+        }
+        if (itemUpdateDto.getAvailable() != null) {
+            dbItem.setAvailable(itemUpdateDto.getAvailable());
         }
         dbItem.setOwnerId(ownerId);
         return itemRepository.update(itemId, dbItem);
