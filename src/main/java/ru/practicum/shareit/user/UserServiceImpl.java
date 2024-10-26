@@ -31,6 +31,7 @@ public class UserServiceImpl implements UserService {
         List<User> users = repository.findAll();
         return users.stream().anyMatch(u -> u.getEmail().equals(email));
     }
+
     @Override
     public User update(User user) {
         User dbUser = repository.get(user.getId()).orElseThrow(() -> new NotFoundException("Пользователь не найден"));
