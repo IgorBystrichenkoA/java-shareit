@@ -71,7 +71,7 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public Booking get(Long userId, Long bookingId) {
         Booking booking = bookingRepository.findById(bookingId)
-                .orElseThrow(()-> new NotFoundException("Бронь не найдена" + bookingId));
+                .orElseThrow(() -> new NotFoundException("Бронь не найдена" + bookingId));
         if (userId.equals(booking.getItem().getOwner().getId()) || userId.equals(booking.getBooker().getId())) {
             log.info("Получена бронь: {}", booking);
             return booking;
