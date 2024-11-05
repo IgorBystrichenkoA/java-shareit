@@ -7,4 +7,5 @@ import org.springframework.transaction.annotation.EnableTransactionManagement;
 @Configuration
 @EnableTransactionManagement
 @EnableJpaRepositories(basePackages = "ru.practicum.shareit")
-public class PersistenceJPAConfig { }
+public class PersistenceJPAConfig {
+}

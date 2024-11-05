@@ -11,6 +11,7 @@ import java.util.List;
 public class RejectedStrategy implements StateStrategy {
 
     private final BookingRepository bookingRepository;
+
     public RejectedStrategy(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }

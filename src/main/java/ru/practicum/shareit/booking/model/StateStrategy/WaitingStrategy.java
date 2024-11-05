@@ -11,6 +11,7 @@ import java.util.List;
 public class WaitingStrategy implements StateStrategy {
 
     private final BookingRepository bookingRepository;
+
     public WaitingStrategy(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }

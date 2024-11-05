@@ -11,6 +11,7 @@ import java.util.List;
 public class FutureStrategy implements StateStrategy {
 
     private final BookingRepository bookingRepository;
+
     public FutureStrategy(BookingRepository bookingRepository) {
         this.bookingRepository = bookingRepository;
     }
