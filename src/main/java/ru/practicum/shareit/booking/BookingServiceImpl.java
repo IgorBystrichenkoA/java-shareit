@@ -8,6 +8,8 @@ import ru.practicum.shareit.booking.dto.BookingCreateDto;
 import ru.practicum.shareit.booking.model.Booking;
 import ru.practicum.shareit.booking.model.BookingState;
 import ru.practicum.shareit.booking.model.BookingStatus;
+import ru.practicum.shareit.booking.model.StateStrategy.StateStrategy;
+import ru.practicum.shareit.booking.model.StateStrategy.StateStrategyFactory;
 import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotAllowedException;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -27,6 +29,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
     private final UserService userService;
     private final ItemService itemService;
+    private final StateStrategyFactory stateStrategyFactory;
 
     @Override
     @Transactional
@@ -82,17 +85,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> findAll(Long bookerId, String state) {
         userService.get(bookerId);
-
         BookingState bookingState = BookingState.valueOf(state);
-
-        List<Booking> bookings = switch (bookingState) {
-            case ALL -> bookingRepository.findAllByBookerId(bookerId);
-            case CURRENT -> bookingRepository.findCurrentByBookerId(bookerId);
-            case PAST -> bookingRepository.findPastByBookerId(bookerId);
-            case FUTURE -> bookingRepository.findFutureByBookerId(bookerId);
-            case WAITING -> bookingRepository.findWaitingByBookerId(bookerId);
-            case REJECTED -> bookingRepository.findRejectedByBookerId(bookerId);
-        };
+        StateStrategy strategy = stateStrategyFactory.findStrategy(bookingState);
+        List<Booking> bookings = strategy.findAll(bookerId);
         log.info("Получен список броней по bookerId размером: {}", bookings.size());
         return bookings;
     }
@@ -100,17 +95,9 @@ public class BookingServiceImpl implements BookingService {
     @Override
     public List<Booking> findAllOwner(Long ownerId, String state) {
         userService.get(ownerId);
-
         BookingState bookingState = BookingState.valueOf(state);
-
-        List<Booking> bookings = switch (bookingState) {
-            case ALL -> bookingRepository.findAllByOwnerId(ownerId);
-            case CURRENT -> bookingRepository.findCurrentByOwnerId(ownerId);
-            case PAST -> bookingRepository.findPastByOwnerId(ownerId);
-            case FUTURE -> bookingRepository.findFutureByOwnerId(ownerId);
-            case WAITING -> bookingRepository.findWaitingByOwnerId(ownerId);
-            case REJECTED -> bookingRepository.findRejectedByOwnerId(ownerId);
-        };
+        StateStrategy strategy = stateStrategyFactory.findStrategy(bookingState);
+        List<Booking> bookings = strategy.findAllOwner(ownerId);
         log.info("Получен список броней по ownerId размером: {}", bookings.size());
         return bookings;
     }
