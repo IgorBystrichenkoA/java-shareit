@@ -6,6 +6,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import ru.practicum.shareit.exception.ForbiddenException;
 import ru.practicum.shareit.exception.NotFoundException;
 
 @Slf4j
@@ -19,21 +20,27 @@ public class ErrorHandler {
         return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
     }
 
+    @ExceptionHandler(ForbiddenException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ErrorResponse handleForbiddenException(final ForbiddenException e) {
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+    }
+
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public ErrorResponse handleHappinessOverflow(final NotFoundException e) {
+    public ErrorResponse handleNotFoundException(final NotFoundException e) {
         return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
-    public ErrorResponse handleHappinessOverflow(final IllegalArgumentException e) {
+    public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
         return new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleHappinessOverflow(final MethodArgumentNotValidException e) {
+    public ErrorResponse handleNotValidException(final MethodArgumentNotValidException e) {
         return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
     }
 }
