@@ -1,16 +1,22 @@
 package ru.practicum.shareit.request;
 
-import lombok.Data;
-import lombok.EqualsAndHashCode;
+import jakarta.persistence.*;
+import lombok.*;
+import ru.practicum.shareit.user.model.User;
 
-/**
- * TODO Sprint add-item-requests.
- */
-@Data
-@EqualsAndHashCode(of = "id")
+@Entity
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
+@Table(name = "requests")
 public class ItemRequest {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private Long itemId;
     private String name;
     private String description;
+    @ManyToOne
+    @JoinColumn(name = "requester_id")
+    private User requester;
 }
