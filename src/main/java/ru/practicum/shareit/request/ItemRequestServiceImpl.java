@@ -5,7 +5,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
-import ru.practicum.shareit.item.ItemService;
 import ru.practicum.shareit.request.dto.ItemRequestCreateDto;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.model.User;
@@ -19,7 +18,6 @@ import java.util.List;
 @Transactional(readOnly = true)
 public class ItemRequestServiceImpl implements ItemRequestService {
     private final UserService userService;
-    private final ItemService itemService;
     private final ItemRequestRepository repository;
 
     @Transactional
