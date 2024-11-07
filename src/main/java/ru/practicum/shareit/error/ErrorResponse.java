@@ -8,4 +8,5 @@ import lombok.Getter;
 public class ErrorResponse {
     private Integer status;
     private String message;
+    private String error;
 }

@@ -1,5 +1,6 @@
 package ru.practicum.shareit.item.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.*;
 import ru.practicum.shareit.request.ItemRequest;
@@ -24,7 +25,8 @@ public class Item {
     @ManyToOne
     @JoinColumn(name = "owner_id", nullable = false)
     private User owner;
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "request_id")
+    @JsonBackReference
     private ItemRequest request;
 }

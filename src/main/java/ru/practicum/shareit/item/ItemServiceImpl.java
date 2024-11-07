@@ -14,6 +14,8 @@ import ru.practicum.shareit.item.model.Comment;
 import ru.practicum.shareit.item.model.Item;
 import ru.practicum.shareit.item.repository.CommentRepository;
 import ru.practicum.shareit.item.repository.ItemRepository;
+import ru.practicum.shareit.request.ItemRequest;
+import ru.practicum.shareit.request.ItemRequestService;
 import ru.practicum.shareit.user.UserService;
 import ru.practicum.shareit.user.model.User;
 
@@ -29,13 +31,15 @@ public class ItemServiceImpl implements ItemService {
     private final CommentRepository commentRepository;
     private final UserService userService;
     private final BookingService bookingService;
+    private final ItemRequestService itemRequestService;
 
     public ItemServiceImpl(ItemRepository itemRepository, CommentRepository commentRepository, UserService userService,
-                           @Lazy BookingService bookingService) {
+                           @Lazy BookingService bookingService, @Lazy ItemRequestService itemRequestService) {
         this.itemRepository = itemRepository;
         this.commentRepository = commentRepository;
         this.userService = userService;
         this.bookingService = bookingService;
+        this.itemRequestService = itemRequestService;
     }
 
     @Override
@@ -49,12 +53,17 @@ public class ItemServiceImpl implements ItemService {
     @Transactional
     public Item create(Long ownerId, ItemCreateDto itemCreateDto) {
         User user = userService.get(ownerId);
+
         Item item = Item.builder()
                 .name(itemCreateDto.getName())
                 .description(itemCreateDto.getDescription())
                 .available(itemCreateDto.getAvailable())
                 .owner(user)
                 .build();
+        if (itemCreateDto.getRequestId() != null) {
+            ItemRequest request = itemRequestService.get(itemCreateDto.getRequestId());
+            item.setRequest(request);
+        }
         Item newItem = itemRepository.save(item);
         log.info("Создан предмет: {}", newItem);
         return newItem;

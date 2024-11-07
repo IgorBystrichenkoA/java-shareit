@@ -18,36 +18,36 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(final Exception e) {
         log.warn("Error", e);
-        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage());
+        return new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.value(), e.getMessage(), e.getClass().getSimpleName());
     }
 
     @ExceptionHandler(ForbiddenException.class)
     @ResponseStatus(HttpStatus.FORBIDDEN)
     public ErrorResponse handleForbiddenException(final ForbiddenException e) {
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), e.getClass().getSimpleName());
     }
 
     @ExceptionHandler(NotAllowedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotAllowedException(final NotAllowedException e) {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), e.getClass().getSimpleName());
     }
 
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(final NotFoundException e) {
-        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage());
+        return new ErrorResponse(HttpStatus.NOT_FOUND.value(), e.getMessage(), e.getClass().getSimpleName());
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseStatus(HttpStatus.CONFLICT)
     public ErrorResponse handleIllegalArgumentException(final IllegalArgumentException e) {
-        return new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage());
+        return new ErrorResponse(HttpStatus.CONFLICT.value(), e.getMessage(), e.getClass().getSimpleName());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleNotValidException(final MethodArgumentNotValidException e) {
-        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage());
+        return new ErrorResponse(HttpStatus.BAD_REQUEST.value(), e.getMessage(), e.getClass().getSimpleName());
     }
 }
