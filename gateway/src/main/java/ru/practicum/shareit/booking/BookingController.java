@@ -7,13 +7,11 @@ import org.springframework.web.bind.annotation.*;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import ru.practicum.shareit.booking.dto.BookingCreateDto;
 
 @Controller
 @RequestMapping(path = "/bookings")
 @RequiredArgsConstructor
-@Slf4j
 @Validated
 public class BookingController {
 	private final BookingClient bookingClient;
@@ -21,13 +19,12 @@ public class BookingController {
 	@PostMapping
 	public ResponseEntity<Object> create(@RequestHeader("X-Sharer-User-Id") Long userId,
 							 @Valid @RequestBody BookingCreateDto bookingDto) {
-		return bookingClient.bookItem(userId, bookingDto);
+		return bookingClient.create(userId, bookingDto);
 	}
 
 	@PatchMapping("/{bookingId}")
 	public ResponseEntity<Object> updateStatus(@RequestHeader("X-Sharer-User-Id") Long userId,
-								   @PathVariable("bookingId")
-								   Long bookingId,
+								   @PathVariable("bookingId") Long bookingId,
 								   @RequestParam(name = "approved") Boolean approved) {
 		return bookingClient.updateStatus(userId, bookingId, approved);
 	}
@@ -36,7 +33,7 @@ public class BookingController {
 	public ResponseEntity<Object> findBookingById(@RequestHeader("X-Sharer-User-Id") Long userId,
 									  @PathVariable("bookingId")
 									  Long bookingId) {
-		return bookingClient.getBooking(userId, bookingId);
+		return bookingClient.getById(userId, bookingId);
 	}
 
 	@GetMapping
