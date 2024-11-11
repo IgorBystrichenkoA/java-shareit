@@ -2,6 +2,7 @@ package ru.practicum.shareit.request;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.shareit.exception.NotFoundException;
@@ -38,7 +39,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequest> getAllByUser(Long userId) {
         userService.get(userId);
         List<ItemRequest> itemRequestList = repository
-                .findAllByRequestorIdOrderByCreatedAsc(userId);
+                .findAllByRequestorId(userId, Sort.by(Sort.Direction.ASC, "created"));
         log.info("Получен список запросов предметов по requestorId размером: {}", itemRequestList.size());
         return itemRequestList;
     }
@@ -47,7 +48,7 @@ public class ItemRequestServiceImpl implements ItemRequestService {
     public List<ItemRequest> getAll(Long userId) {
         userService.get(userId);
         List<ItemRequest> itemRequestList = repository
-                .findAllByRequestorIdIsNotOrderByCreatedAsc(userId);
+                .findAllByRequestorIdIsNot(userId, Sort.by(Sort.Direction.ASC, "created"));
         log.info("Получен список запросов предметов других пользователей размером: {}", itemRequestList.size());
         return itemRequestList;
     }
